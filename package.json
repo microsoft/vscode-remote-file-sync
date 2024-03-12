@@ -19,6 +19,7 @@
     "commands": [
       {
         "command": "vscode-remote-file-sync.helloWorld",
+        "category": "vrfs",
         "title": "Hello World"
       }
     ]
