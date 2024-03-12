@@ -3,6 +3,10 @@
   "displayName": "vscode-remote-file-sync",
   "description": "",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/microsoft/vscode-remote-file-sync"
+  },
   "engines": {
     "vscode": "^1.87.0"
   },
@@ -23,19 +27,21 @@
     "vscode:prepublish": "yarn run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
+    "package": "yarn run compile && yarn vsce package",
     "pretest": "yarn run compile && yarn run lint",
     "lint": "eslint src --ext ts",
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.87.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
+    "@types/vscode": "^1.87.0",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
-    "eslint": "^8.56.0",
-    "typescript": "^5.3.3",
     "@vscode/test-cli": "^0.0.6",
-    "@vscode/test-electron": "^2.3.9"
+    "@vscode/test-electron": "^2.3.9",
+    "@vscode/vsce": "^2.24.0",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3"
   }
 }
