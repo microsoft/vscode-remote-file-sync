@@ -5,9 +5,7 @@ import { workspace, Uri, window } from 'vscode';
 import * as path from "path";
 import * as fs from "fs";
 import * as os from "os";
-import { createFileOnLocal, syncFileOn, syncFileOnCodespaceAndLocal, syncFileOnLocalAndCodespace } from './common';
-
-const outputChannel = window.createOutputChannel("VSCode Remote Sync");
+import { createFileOnLocal, syncFileOn } from './common';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed

@@ -26,5 +26,6 @@ const syncFileOn = async (path1_filePath: Uri, path2_filePath: Uri): Promise <vo
 }
 export {
     createFileOnLocal,
-    syncFileOn
+    syncFileOn,
+    outputChannel
 }
