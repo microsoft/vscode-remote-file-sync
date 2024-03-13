@@ -5,7 +5,7 @@ import { workspace, Uri, window } from 'vscode';
 import * as path from "path";
 import * as fs from "fs";
 import * as os from "os";
-import { createFileOnLocal } from './common';
+import { createFileOnLocal, syncFileOn, syncFileOnCodespaceAndLocal, syncFileOnLocalAndCodespace } from './common';
 
 const outputChannel = window.createOutputChannel("VSCode Remote Sync");
 
@@ -24,44 +24,14 @@ export function activate(context: vscode.ExtensionContext) {
 	let disposable = vscode.commands.registerCommand('vscode-remote-file-sync.helloWorld', async () => {
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
-		const codeSpaceBashHistoryPath = Uri.file(os.homedir());
-		const codeSpaceBashHistoryFilePath = Uri.joinPath(codeSpaceBashHistoryPath, ".bash_history");
+		const codeSpaceBashHistoryPath = os.homedir();
+		const codeSpaceBashHistoryFilePath = path.join(codeSpaceBashHistoryPath, ".bash_history");
 		const localBashHistoryFilePath = path.join("C:", "vscode_remote_sync_dir", ".bash_history");
 
 		await createFileOnLocal(localBashHistoryFilePath);
+		//await syncFileOn(Uri.file(codeSpaceBashHistoryFilePath), Uri.file(localBashHistoryFilePath).with({scheme: "vscode-local"}));
+		await syncFileOn(Uri.file(localBashHistoryFilePath).with({scheme: "vscode-local"}), Uri.file(codeSpaceBashHistoryFilePath),);
 
-		try {
-			const codeSpaceBashHistoryData = await workspace.fs.readFile(codeSpaceBashHistoryFilePath);
-			outputChannel.appendLine(JSON.stringify(codeSpaceBashHistoryData.toString()));
-			await workspace.fs.writeFile(Uri.file(localBashHistoryFilePath).with({ scheme: "vscode-local" }), codeSpaceBashHistoryData);
-			
-		} catch (error) {
-			outputChannel.appendLine("error-1");
-			outputChannel.appendLine(JSON.stringify(error));
-		}
-
-		try {
-			const codeSpaceBashHistoryData = await workspace.fs.readFile(codeSpaceBashHistoryFilePath);
-			outputChannel.appendLine(JSON.stringify(codeSpaceBashHistoryData));
-			await workspace.fs.writeFile(Uri.file(localBashHistoryFilePath), Buffer.from("Hello world"));
-			
-		} catch (error) {
-			outputChannel.appendLine("error-2");
-			outputChannel.appendLine(JSON.stringify(error));
-		}
-
-		try {
-			outputChannel.appendLine("Reading the file");
-			const codeSpaceBashHistoryData = await workspace.fs.readFile(codeSpaceBashHistoryFilePath);
-			outputChannel.appendLine(JSON.stringify(codeSpaceBashHistoryData));
-			outputChannel.appendLine("Deleting the file");
-			await workspace.fs.delete(Uri.file(localBashHistoryFilePath), { recursive: false, useTrash: false });
-			//await workspace.fs.writeFile(Uri.file(localBashHistoryFilePath), Buffer.from("Hello world"));
-			
-		} catch (error) {
-			outputChannel.appendLine("error-3");
-			outputChannel.appendLine(JSON.stringify(error));
-		}
 
 		vscode.window.showInformationMessage('Hello World from vscode-remote-file-sync!');
 	});
