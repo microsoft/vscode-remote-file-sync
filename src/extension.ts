@@ -26,14 +26,14 @@ export function activate(context: vscode.ExtensionContext) {
 		// Display a message box to the user
 		const codeSpaceBashHistoryPath = Uri.file(os.homedir());
 		const codeSpaceBashHistoryFilePath = Uri.joinPath(codeSpaceBashHistoryPath, ".bash_history");
-		const localBashHistoryFilePath = path.join("C:/", "vscode_remote_sync_dir", ".bash_history");
+		const localBashHistoryFilePath = path.join("C:", "vscode_remote_sync_dir", ".bash_history");
 
 		await createFileOnLocal(localBashHistoryFilePath);
 
 		try {
 			const codeSpaceBashHistoryData = await workspace.fs.readFile(codeSpaceBashHistoryFilePath);
-			outputChannel.appendLine(JSON.stringify(codeSpaceBashHistoryData));
-			const localBashHistoryData = await workspace.fs.writeFile(Uri.file(localBashHistoryFilePath), codeSpaceBashHistoryData);
+			outputChannel.appendLine(JSON.stringify(codeSpaceBashHistoryData.toString()));
+			await workspace.fs.writeFile(Uri.file(localBashHistoryFilePath).with({ scheme: "vscode-local" }), codeSpaceBashHistoryData);
 			
 		} catch (error) {
 			outputChannel.appendLine("error-1");
