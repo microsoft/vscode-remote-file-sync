@@ -14,7 +14,7 @@ const createFileOnLocal = async (localPath: string): Promise<void> => {
         await workspace.fs.writeFile(localFilePath, Buffer.from(''));
     }
 }
-
+/*
 const syncFileOn = async (path1_filePath: Uri, path2_filePath: Uri): Promise <void> => {
     try {
         const path1_FileData = await workspace.fs.readFile(path1_filePath);
@@ -24,6 +24,33 @@ const syncFileOn = async (path1_filePath: Uri, path2_filePath: Uri): Promise <vo
         outputChannel.appendLine(JSON.stringify(error));
     }
 }
+*/
+const writeFile = async (path1_filePath: Uri, path2_filePath: Uri): Promise <void> => {
+    try {
+        const path1_FileData = await workspace.fs.readFile(path1_filePath);
+        await workspace.fs.writeFile(path2_filePath, path1_FileData);
+    } catch (error) {
+        outputChannel.appendLine("Getting error on trying to sync.");
+        outputChannel.appendLine(JSON.stringify(error));
+    }
+}
+
+const syncFileOn = async (path1_filePath: Uri, path2_filePath: Uri): Promise <void> => {
+    try {
+        const path1_FileData = await workspace.fs.stat(path1_filePath);
+        const path12_FileData = await workspace.fs.stat(path2_filePath);
+        
+        if (path1_FileData.size > path12_FileData.size) {
+            await writeFile(path1_filePath, path2_filePath);
+        } else {
+            await writeFile(path2_filePath, path1_filePath);
+        }
+    } catch (error) {
+        outputChannel.appendLine("Getting error on trying to sync.");
+        outputChannel.appendLine(JSON.stringify(error));
+    }
+}
+
 export {
     createFileOnLocal,
     syncFileOn,

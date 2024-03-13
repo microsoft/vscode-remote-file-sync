@@ -1,9 +1,8 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { workspace, Uri, window } from 'vscode';
+import { Uri } from 'vscode';
 import * as path from "path";
-import * as fs from "fs";
 import * as os from "os";
 import { createFileOnLocal, syncFileOn } from './common';
 
@@ -27,9 +26,7 @@ export function activate(context: vscode.ExtensionContext) {
 		const localBashHistoryFilePath = path.join("C:", "vscode_remote_sync_dir", ".bash_history");
 
 		await createFileOnLocal(localBashHistoryFilePath);
-		//await syncFileOn(Uri.file(codeSpaceBashHistoryFilePath), Uri.file(localBashHistoryFilePath).with({scheme: "vscode-local"}));
-		await syncFileOn(Uri.file(localBashHistoryFilePath).with({scheme: "vscode-local"}), Uri.file(codeSpaceBashHistoryFilePath),);
-
+		await syncFileOn(Uri.file(localBashHistoryFilePath).with({scheme: "vscode-local"}), Uri.file(codeSpaceBashHistoryFilePath));
 
 		vscode.window.showInformationMessage('Hello World from vscode-remote-file-sync!');
 	});
