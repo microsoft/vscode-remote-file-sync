@@ -5,24 +5,10 @@ import { workspace, Uri, window } from 'vscode';
 import * as path from "path";
 import * as fs from "fs";
 import * as os from "os";
+import { createFileOnLocal } from './common';
 
 const outputChannel = window.createOutputChannel("VSCode Remote Sync");
 
-/*
-	Ignore this commented 
-		// const data = await workspace.fs.readDirectory(Uri.file("C:/").with({ scheme: "vscode-local" }));
-		// outputChannel.appendLine(JSON.stringify(data));
-		// const data2 = await workspace.fs.readDirectory(Uri.file("/workspaces"));
-		// outputChannel.appendLine(JSON.stringify(data2));
-		// outputChannel.appendLine("Hello Everyone! Welcome to vscode extension");
-				// const data3 = fs.writeFileSync(codeSpaceBashHistoryPath, "utf8");
-		// outputChannel.appendLine(JSON.stringify(data3));
-		
-		// const data4 = Uri.file(codeSpaceBashHistoryPath);
-		// outputChannel.appendLine(JSON.stringify(data4));
-					// Uri.file(  "C:/.vscode_remote_sync_dir/.bash_history").with({ scheme: "vscode-local" }),
-
-*/
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -38,18 +24,39 @@ export function activate(context: vscode.ExtensionContext) {
 	let disposable = vscode.commands.registerCommand('vscode-remote-file-sync.helloWorld', async () => {
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
+		const codeSpaceBashHistoryPath = Uri.file(os.homedir());
+		const localBashHistoryPath = path.join("C:/", "vscode_remote_sync_dir", ".bash_history");
+		// const codeSpaceBashHistoryFilePath = Uri.joinPath(codeSpaceBashHistoryPath, ".bash_history");
+		// const localBashHistoryPathFilePath = Uri.joinPath(localBashHistoryPath, ".bash_history");
 
-		const codeSpaceBashHistoryPath = path.join(os.homedir(), ".bash_history");
-		const localBashHistoryPath =  path.join(os.homedir(), "vscode_remote_sync_dir", ".bash_history");
-		outputChannel.appendLine(JSON.stringify(codeSpaceBashHistoryPath));
-		outputChannel.appendLine(JSON.stringify(localBashHistoryPath));
+		await createFileOnLocal(localBashHistoryPath);
+		/*
+		try {
+			workspace.fs.delete(Uri.file(localBashHistoryPath).with({ scheme: "vscode-local" }), {recursive: false});
+			await workspace.fs.copy(
+				Uri.file(codeSpaceBashHistoryPath),
+				Uri.file(localBashHistoryPath).with({ scheme: "vscode-local" }),
+			);
+			outputChannel.appendLine("Successfully able to copy it");
+		} catch (error) {
+			outputChannel.appendLine("Not able to copy it");
+			outputChannel.appendLine(JSON.stringify(error));
+		} */
+/*		
+		try {
+			const wsedit = new vscode.WorkspaceEdit();
+			wsedit.createFile(Uri.file(localBashHistoryPath).with({ scheme: "vscode-local" }), {ignoreIfExists: true});
+			// await workspace.fs.copy(
+			// 	Uri.file(codeSpaceBashHistoryPath),
+			// 	Uri.file(localBashHistoryPath).with({ scheme: "vscode-local" }),
+			// );
+		} catch (error) {
+			outputChannel.appendLine("Not able to copy it");
+			outputChannel.appendLine(JSON.stringify(error));
+		}
 
 
-		await workspace.fs.copy(
-			Uri.file(codeSpaceBashHistoryPath),
-			Uri.file(localBashHistoryPath).with({ scheme: "vscode-local" }),
-		);
-
+*/
 		// await workspace.fs.copy(
 		// 	Uri.file("C:/.vscode_remote_sync_dir/.bash_history").with({ scheme: "vscode-local" }),
 		// 	Uri.file("~/.bash_history"),
