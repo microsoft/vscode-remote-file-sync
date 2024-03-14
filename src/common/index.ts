@@ -58,6 +58,7 @@ const syncFileOn = async (path1_filePath: Uri, path2_filePath: Uri): Promise <vo
         } else {
             await writeFile(path2_filePath, path1_filePath);
         }
+        outputChannel.appendLine("File syncing is completed.");
     } catch (error) {
         outputChannel.appendLine("Getting error on trying to sync.");
         outputChannel.appendLine(JSON.stringify(error));

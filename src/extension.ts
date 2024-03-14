@@ -4,34 +4,23 @@ import * as vscode from 'vscode';
 import { Uri } from 'vscode';
 import * as path from "path";
 import * as os from "os";
-import { createFile, syncFileOn } from './common';
+import { createFile, outputChannel, syncFileOn } from './common';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
 
+	outputChannel.appendLine("vscode-remote-file-sync is now active!");
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "vscode-remote-file-sync" is now active!');
+	const codeSpaceBashHistoryPath = os.homedir();
+	const codeSpaceBashHistoryFilePath = Uri.file(path.join(codeSpaceBashHistoryPath, ".bash_history"));
+	const localBashHistoryFilePath = Uri.file(path.join("C:", "vscode_remote_sync_dir", ".bash_history")).with({scheme: "vscode-local"});
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('vscode-remote-file-sync.helloWorld', async () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		const codeSpaceBashHistoryPath = os.homedir();
-		const codeSpaceBashHistoryFilePath = path.join(codeSpaceBashHistoryPath, ".bash_history");
-		const localBashHistoryFilePath = path.join("C:", "vscode_remote_sync_dir", ".bash_history");
+	await createFile(localBashHistoryFilePath);
 
-		await createFile(Uri.file(localBashHistoryFilePath).with({scheme: "vscode-local"}));
-		await syncFileOn(Uri.file(localBashHistoryFilePath).with({scheme: "vscode-local"}), Uri.file(codeSpaceBashHistoryFilePath));
-
-		vscode.window.showInformationMessage('Hello World from vscode-remote-file-sync!');
-	});
-
-	context.subscriptions.push(disposable);
+	setInterval(async () => {
+		await syncFileOn(localBashHistoryFilePath, codeSpaceBashHistoryFilePath);
+	}, 60000);
 }
 
 // This method is called when your extension is deactivated
