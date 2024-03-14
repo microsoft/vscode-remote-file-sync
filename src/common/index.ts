@@ -23,8 +23,6 @@ const createFile = async (filePath: Uri): Promise<void> => {
         await workspace.fs.stat(filePath);
     } catch (error) {
         outputChannel.appendLine("error on creating file: " +  JSON.stringify(error));
-    } finally {
-        outputChannel.appendLine("Calling the finally method");
         await workspace.fs.createDirectory(fileDirectory);
         await workspace.fs.writeFile(filePath, Buffer.from(''));
     }
