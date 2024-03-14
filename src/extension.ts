@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import { Uri } from 'vscode';
 import * as path from "path";
 import * as os from "os";
-import { createFileOnLocal, syncFileOn } from './common';
+import { createFile, syncFileOn } from './common';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -25,7 +25,7 @@ export function activate(context: vscode.ExtensionContext) {
 		const codeSpaceBashHistoryFilePath = path.join(codeSpaceBashHistoryPath, ".bash_history");
 		const localBashHistoryFilePath = path.join("C:", "vscode_remote_sync_dir", ".bash_history");
 
-		await createFileOnLocal(localBashHistoryFilePath);
+		await createFile(Uri.file(localBashHistoryFilePath).with({scheme: "vscode-local"}));
 		await syncFileOn(Uri.file(localBashHistoryFilePath).with({scheme: "vscode-local"}), Uri.file(codeSpaceBashHistoryFilePath));
 
 		vscode.window.showInformationMessage('Hello World from vscode-remote-file-sync!');

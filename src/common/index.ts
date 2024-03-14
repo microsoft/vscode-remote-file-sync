@@ -2,7 +2,7 @@ import { workspace, Uri, window } from 'vscode';
 import * as path from "path";
 
 const outputChannel = window.createOutputChannel("vsfc");
-
+/*
 const createFileOnLocal = async (localPath: string): Promise<void> => {
     const localFilePath = Uri.file(localPath).with({ scheme: "vscode-local" });
     const localFileDirectory = Uri.file(path.dirname(localPath)).with({ scheme: "vscode-local" });
@@ -12,6 +12,21 @@ const createFileOnLocal = async (localPath: string): Promise<void> => {
     } catch (error) {
         await workspace.fs.createDirectory(localFileDirectory);
         await workspace.fs.writeFile(localFilePath, Buffer.from(''));
+    }
+}
+*/
+
+const createFile = async (filePath: Uri): Promise<void> => {
+    const fileDirectory = Uri.file(path.dirname(filePath.path)).with({scheme: filePath.scheme});
+
+    try {
+        await workspace.fs.stat(filePath);
+    } catch (error) {
+        outputChannel.appendLine("error on creating file: " +  JSON.stringify(error));
+    } finally {
+        outputChannel.appendLine("Calling the finally method");
+        await workspace.fs.createDirectory(fileDirectory);
+        await workspace.fs.writeFile(filePath, Buffer.from(''));
     }
 }
 /*
@@ -52,7 +67,7 @@ const syncFileOn = async (path1_filePath: Uri, path2_filePath: Uri): Promise <vo
 }
 
 export {
-    createFileOnLocal,
+    createFile,
     syncFileOn,
     outputChannel
 }
