@@ -54,13 +54,30 @@ const syncFileOn = async (path1_filePath: Uri, path2_filePath: Uri): Promise <vo
         const path12_FileData = await workspace.fs.stat(path2_filePath);
         
         if (path1_FileData.size > path12_FileData.size) {
-            await writeFile(path1_filePath, path2_filePath);
+            await appendFile(path1_filePath, path2_filePath);
         } else {
-            await writeFile(path2_filePath, path1_filePath);
+            await appendFile(path1_filePath, path2_filePath);
         }
         outputChannel.appendLine("File syncing is completed.");
     } catch (error) {
         outputChannel.appendLine("Getting error on trying to sync.");
+        outputChannel.appendLine(JSON.stringify(error));
+    }
+}
+
+const appendFile = async (filePath1: Uri, filePath2: Uri) => {
+    try {
+        const fileContent1 = await workspace.fs.readFile(filePath1);
+        const fileContent2 = await workspace.fs.readFile(filePath2);
+    
+        // To be updated: Adding fileContent of file1 before file2 for now
+        let finalFileContent: Uint8Array = new Uint8Array([ ...fileContent1, ...fileContent2 ]);
+        
+        // Update both files
+        await workspace.fs.writeFile(filePath1, finalFileContent);
+        await workspace.fs.writeFile(filePath2, finalFileContent);
+    } catch (error) {
+        outputChannel.appendLine(`Error while appending data`);
         outputChannel.appendLine(JSON.stringify(error));
     }
 }

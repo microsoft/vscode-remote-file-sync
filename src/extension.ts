@@ -16,6 +16,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	const codeSpaceBashHistoryFilePath = Uri.file(path.join(codeSpaceBashHistoryPath, ".bash_history"));
 	const localBashHistoryFilePath = Uri.file(path.join("C:", "vscode_remote_sync_dir", ".bash_history")).with({scheme: "vscode-local"});
 
+	await createFile(codeSpaceBashHistoryFilePath); // In case .bash_history doesn't exist on codespace
 	await createFile(localBashHistoryFilePath);
 
 	setInterval(async () => {
