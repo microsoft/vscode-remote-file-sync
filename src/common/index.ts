@@ -69,10 +69,19 @@ const appendFile = async (filePath1: Uri, filePath2: Uri) => {
     try {
         const fileContent1 = await workspace.fs.readFile(filePath1);
         const fileContent2 = await workspace.fs.readFile(filePath2);
-    
-        // To be updated: Adding fileContent of file1 before file2 for now
-        let finalFileContent: Uint8Array = new Uint8Array([ ...fileContent1, ...fileContent2 ]);
-        
+
+        // Convert Uint8Array to string, split into lines, and filter out empty lines
+        const lines1 = new TextDecoder().decode(fileContent1).split('\n').filter(line => line.trim() !== '');
+        const lines2 = new TextDecoder().decode(fileContent2).split('\n').filter(line => line.trim() !== '');
+
+        // Merge arrays and remove duplicates
+        const mergedLines = Array.from(new Set([...lines1, ...lines2]));
+
+        // Convert back to Uint8Array and add a newline character at the end
+        const finalFileContent = new TextEncoder().encode(mergedLines.join('\n') + '\n');
+
+        outputChannel.appendLine("File content: " + mergedLines.join('\n'));
+
         // Update both files
         await workspace.fs.writeFile(filePath1, finalFileContent);
         await workspace.fs.writeFile(filePath2, finalFileContent);
