@@ -80,8 +80,6 @@ const appendFile = async (filePath1: Uri, filePath2: Uri) => {
         // Convert back to Uint8Array and add a newline character at the end
         const finalFileContent = new TextEncoder().encode(mergedLines.join('\n') + '\n');
 
-        outputChannel.appendLine("File content: " + mergedLines.join('\n'));
-
         // Update both files
         await workspace.fs.writeFile(filePath1, finalFileContent);
         await workspace.fs.writeFile(filePath2, finalFileContent);
