@@ -4,21 +4,10 @@
 
 ## High Level Design
 
-
 ![high level design](https://github.com/microsoft/vscode-remote-file-sync/assets/53661347/32e7c8fd-2319-4012-aa48-9cdfcb506162)
 
-# Project
-
-> This repo has been populated by an initial template to help get you started. Please
-> make sure to update the content to build a great experience for community-building.
-
-As the maintainer of this project, please make a few updates:
-
-- Improving this README.MD file to provide a great experience
-- Updating SUPPORT.MD with content about this project's support experience
-- Understanding the security reporting process in SECURITY.MD
-- Remove this section from the README
-
+## Limitation
+- Currently this extension does not work while opening the codespace in browsers. 
 ## Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
