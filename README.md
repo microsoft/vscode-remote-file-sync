@@ -5,6 +5,7 @@
 ## High Level Design
 
 
+![high level design](https://github.com/microsoft/vscode-remote-file-sync/assets/53661347/32e7c8fd-2319-4012-aa48-9cdfcb506162)
 
 # Project
 
